@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {HTTP_STATUSES} from "../settings";
-import {BodyTypeBlog, BodyTypePost, ParamType, QueryType} from "../types/request-response-type";
+import {BodyTypeBlog, ParamType, QueryType} from "../types/request-response-type";
 import {blogsMongoRepositories} from "./blogsMongoRepositories";
 import {blogsQueryRepositories} from "./blogsQueryRepositories";
 import {postsMongoRepositories} from "../posts/postsMongoRepositories";

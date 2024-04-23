@@ -72,7 +72,7 @@ export const blogsQueryRepositories = {
                 items: allBlogs.map(x => formatingDataForOutputBlog(x))
             }
         } catch (error) {
-            console.log("22", error);
+            console.log(error);
             return [];
         }
     }

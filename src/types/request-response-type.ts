@@ -1,4 +1,4 @@
-import {Sort, SortDirection} from "mongodb";
+import { SortDirection} from "mongodb";
 
 export type ParamType = {
     id: string
