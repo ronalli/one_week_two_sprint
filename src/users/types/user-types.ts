@@ -10,14 +10,14 @@ export interface IUserViewModel {
     id: string;
     login: string;
     email: string;
-    created_at: string;
+    createdAt: string;
 }
 
 export interface IUserDBType  {
-    _id: ObjectId;
+    _id?: ObjectId;
     login: string;
     email: string;
-    created_at: string;
+    createdAt: string;
 }
 
 export interface IPaginatorUserViewModel {

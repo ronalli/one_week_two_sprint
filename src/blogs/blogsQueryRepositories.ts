@@ -47,7 +47,7 @@ export const blogsQueryRepositories = {
     getAllBlogs: async (queryParams: QueryType): Promise<PaginatorBlog | []> => {
         const query = createDefaultValues(queryParams);
 
-        const search = query.searchNameTerm ? {name: {$regex: query.searchNameTerm, $options: "i"}} : {}
+        const search = query.searchNameTerm ? {name: {$regex: `${query.searchNameTerm}`, $options: "i"}} : {}
 
         const filter = {
             ...search

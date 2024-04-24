@@ -5,22 +5,19 @@ import {SortDirection} from "mongodb";
 
 export const usersQueryRepositories = {
     getUsers: async (queryParams: IUserQueryType): Promise<IPaginatorUserViewModel | []> => {
-
         const query = usersQueryRepositories._createDefaultValues(queryParams);
-
         let search = {};
-
         if(query.searchLoginTerm && query.searchEmailTerm) {
             search = {
                 $or: [
-                    {email: {$regex: query.searchEmailTerm, $options: "i"}},
-                    {login: {$regex: query.searchLoginTerm, $options: "i"}},
+                    {email: {$regex: `${query.searchEmailTerm}`, $options: "i"}},
+                    {login: {$regex: `${query.searchLoginTerm}`, $options: "i"}},
                 ]
             }
         } else if(query.searchLoginTerm) {
-            search = {login: {$regex: query.searchLoginTerm, $options: "i"}}
+            search = {login: {$regex: `${query.searchLoginTerm}`, $options: "i"}}
         } else {
-            search = {email: {$regex: query.searchEmailTerm, $options: "i"}}
+            search = {email: {$regex: `${query.searchEmailTerm}`, $options: "i"}}
         }
 
         const filter = {
@@ -54,7 +51,7 @@ export const usersQueryRepositories = {
     _maping: (users: IUserDBType[]): IUserViewModel[] => {
         return users.map(u => ({
             id: String(u._id),
-            created_at: u.created_at,
+            createdAt: u.createdAt,
             email: u.email,
             login: u.login,
         }))
