@@ -26,7 +26,6 @@ export const usersQueryRepositories = {
             ...search
         }
 
-
         try {
             const allUsers = await userCollection
                 .find(filter ? filter : '')

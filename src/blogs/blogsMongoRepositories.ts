@@ -35,20 +35,6 @@ export const blogsMongoRepositories = {
         }
 
     },
-    // findAllBlogs: async () => {
-    //     try {
-    //         const foundedBlogs = await blogCollection.find({}).toArray()
-    //         if (foundedBlogs.length > 0) {
-    //             return foundedBlogs.map(blog => {
-    //                 return formatingDataForOutputBlog(blog)
-    //             })
-    //         }
-    //         return;
-    //     } catch (e) {
-    //         console.log(e)
-    //         return;
-    //     }
-    // },
     updateBlog: async (id: string, inputUpdateDataBlog: BodyTypeBlog) => {
         const {name, websiteUrl, description} = inputUpdateDataBlog
         try {

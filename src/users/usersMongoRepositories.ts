@@ -37,7 +37,23 @@ export const usersMongoRepositories = {
             return;
         }
     },
+    deleteUser: async (id: string): Promise<boolean | undefined> => {
+    try {
+        const flag = await userCollection.findOne({_id: new ObjectId(id)});
+        if(!flag) {
+            return;
+        }
+        else {
+            await userCollection.findOneAndDelete({_id: new ObjectId(id)});
+            return true;
+        }
 
+    }  catch (error) {
+        console.error(error);
+        return;
+    }
+
+    },
     _maping: (user: IUserDBType): IUserViewModel => {
         return {
             id: String(user._id),
