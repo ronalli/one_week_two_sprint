@@ -16,17 +16,20 @@ export const usersQueryRepositories = {
             }
         } else if(query.searchLoginTerm) {
             search = {login: {$regex: `${query.searchLoginTerm}`, $options: "i"}}
-        } else {
+        } else if(query.searchEmailTerm) {
             search = {email: {$regex: `${query.searchEmailTerm}`, $options: "i"}}
+        } else {
+            search = {};
         }
 
         const filter = {
             ...search
         }
 
+
         try {
             const allUsers = await userCollection
-                .find(filter)
+                .find(filter ? filter : '')
                 .sort(query.sortBy, query.sortDirection)
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)
