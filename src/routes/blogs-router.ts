@@ -5,7 +5,7 @@ import {
 } from "../middleware/input-validation-blog-middleware";
 import {authMiddleware} from "../middleware/auth-middleware";
 import {inputCheckCorrectBlogIdMiddleware, inputCheckErrorsMiddleware} from "../middleware/inputCheckErrorsMiddleware";
-import {validationQueryParamsBlogs} from "../middleware/query-validator-middleware";
+import {validationQueryParamsBlogs, validationQueryParamsPosts} from "../middleware/query-validator-middleware";
 import {validatorParamBlogId} from "../middleware/params-validator-middleware";
 import {validationCreateSpecialPost} from "../middleware/input-validation-post-middleware";
 
@@ -18,7 +18,7 @@ blogsRouter.put('/:id', authMiddleware, ...validationCreateBlog, inputCheckError
 blogsRouter.delete('/:id', authMiddleware, blogsControllers.deleteBlog)
 
 blogsRouter.get('/:id/posts',
-    ...validationQueryParamsBlogs,
+    ...validationQueryParamsPosts,
     inputCheckErrorsMiddleware,
     validatorParamBlogId,
     inputCheckCorrectBlogIdMiddleware,

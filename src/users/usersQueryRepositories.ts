@@ -38,8 +38,8 @@ export const usersQueryRepositories = {
 
             return {
                 pagesCount: Math.ceil(totalCount/ query.pageSize),
-                pageSize: query.pageNumber,
-                page: query.pageSize,
+                pageSize: query.pageSize,
+                page: query.pageNumber,
                 totalCount,
                 items: usersQueryRepositories._maping(allUsers)
             }
