@@ -4,7 +4,6 @@ import {HTTP_STATUSES} from "../settings";
 import {IUserQueryType} from "./types/request-response-type";
 import {IUserInputModel, IUserViewModel} from "./types/user-types";
 import {usersServices} from "./usersServices";
-import {usersMongoRepositories} from "./usersMongoRepositories";
 
 export const usersController = {
     getAllUsers: async (req: Request, res: Response) => {
