@@ -17,6 +17,7 @@ export interface IUserDBType  {
     _id?: ObjectId;
     login: string;
     email: string;
+    hash: string;
     createdAt: string;
 }
 

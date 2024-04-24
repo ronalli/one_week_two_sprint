@@ -1,11 +1,18 @@
 import {IUserDBType, IUserInputModel, IUserViewModel} from "./types/user-types";
 import {userCollection} from "../db/mongo-db";
 import {ObjectId} from "mongodb";
+import {bcryptService} from "../utils/bcrypt-service";
+import bcrypt from "bcrypt";
 
 export const usersMongoRepositories = {
     createUser: async (data: IUserInputModel):Promise<IUserViewModel | undefined> => {
-        const newUser = {
-            ...data,
+
+        const hash = await bcryptService.generateHash(data.password);
+
+        const newUser: IUserDBType = {
+            email: data.email,
+            login: data.login,
+            hash,
             createdAt: new Date().toISOString(),
         }
 
