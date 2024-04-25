@@ -1,9 +1,9 @@
 import {Router} from "express";
 import {usersController} from "../users/usersControllers";
 import {validationQueryUsers} from "../users/middleware/query-validation-middleware";
-import {inputCheckErrorsMiddleware} from "../users/middleware/inputCheckErrorsMiddleware";
 import {validationInputBodyUser} from "../users/middleware/input-validation-middleware";
 import {authMiddleware} from "../middleware/auth-middleware";
+import {inputCheckErrorsMiddleware} from "../middleware/inputCheckErrorsMiddleware";
 
 export const usersRouter = Router({});
 

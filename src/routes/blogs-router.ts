@@ -1,13 +1,12 @@
 import {Router} from 'express';
 import {blogsControllers} from "../blogs/blogsControllers";
-import {
-    validationCreateBlog,
-} from "../middleware/input-validation-blog-middleware";
 import {authMiddleware} from "../middleware/auth-middleware";
 import {inputCheckCorrectBlogIdMiddleware, inputCheckErrorsMiddleware} from "../middleware/inputCheckErrorsMiddleware";
-import {validationQueryParamsBlogs, validationQueryParamsPosts} from "../middleware/query-validator-middleware";
-import {validatorParamBlogId} from "../middleware/params-validator-middleware";
-import {validationCreateSpecialPost} from "../middleware/input-validation-post-middleware";
+import {validationCreateBlog} from "../blogs/middleware/input-validation-middleware";
+import {validatorParamBlogId} from "../blogs/middleware/params-validation-middleware";
+import {validationQueryParamsBlogs} from "../blogs/middleware/query-validation-middleware";
+import {validationQueryParamsPosts} from "../posts/middleware/query-validation-middleware";
+import {validationCreateSpecialPost} from "../posts/middleware/input-validation-middleware";
 
 export const blogsRouter = Router({});
 
@@ -17,14 +16,14 @@ blogsRouter.post('/', authMiddleware, ...validationCreateBlog, inputCheckErrorsM
 blogsRouter.put('/:id', authMiddleware, ...validationCreateBlog, inputCheckErrorsMiddleware, blogsControllers.updateBlog)
 blogsRouter.delete('/:id', authMiddleware, blogsControllers.deleteBlog)
 
-blogsRouter.get('/:id/posts',
+blogsRouter.get('/:blogId/posts',
     ...validationQueryParamsPosts,
     inputCheckErrorsMiddleware,
     validatorParamBlogId,
     inputCheckCorrectBlogIdMiddleware,
     blogsControllers.getAllPostsForBlog)
 
-blogsRouter.post('/:id/posts',
+blogsRouter.post('/:blogId/posts',
     authMiddleware,
     ...validationCreateSpecialPost,
     inputCheckErrorsMiddleware,

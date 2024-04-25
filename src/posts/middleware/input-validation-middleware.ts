@@ -1,6 +1,5 @@
 import {body} from 'express-validator'
-import {blogsMongoRepositories} from "../blogs/blogsMongoRepositories";
-import {blogsQueryRepositories} from "../blogs/blogsQueryRepositories";
+import {blogsQueryRepositories} from "../../blogs/blogsQueryRepositories";
 
 const validationTitle = body('title').trim().notEmpty().withMessage('Field title is empty').isLength({
     max: 30

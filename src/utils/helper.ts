@@ -1,7 +1,7 @@
-import {QueryType} from "../types/request-response-type";
 import {SortDirection} from "mongodb";
+import {IQueryType} from "../types/query-params-type";
 
-export const createDefaultValues = (query: QueryType) => {
+export const createDefaultValues = (query: IQueryType) => {
     return {
         pageNumber: query.pageNumber ? +query.pageNumber : 1,
         pageSize: query.pageSize !== undefined ? +query.pageSize : 10,

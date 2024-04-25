@@ -2,8 +2,9 @@ import {req} from "./test-helpers";
 import {HTTP_STATUSES} from "../src/settings";
 import {SETTINGS} from "../src/settings";
 import {describe} from "node:test";
-import {connectToDB, postCollection} from "../src/db/mongo-db";
-import {BodyTypeBlog, BodyTypePost} from "../src/types/request-response-type";
+import {connectToDB} from "../src/db/mongo-db";
+import {IBlogInputModel} from "../src/blogs/types/blogs-types";
+import {IPostInputModel} from "../src/posts/types/posts-types";
 
 describe('/posts', () => {
     beforeAll(async () => {
@@ -34,14 +35,14 @@ describe('/posts', () => {
     });
 
     it('should create post', async () => {
-        const newBlog: BodyTypeBlog = {
+        const newBlog: IBlogInputModel = {
             name: 'valid name',
             description: 'valid description',
             websiteUrl: 'https://it-incubator.com',
         }
         const createBlog = await req.post(SETTINGS.PATH.BLOGS).set('Authorization', process.env.AUTH_HEADER || '').send(newBlog)
 
-        const newPost: BodyTypePost = {
+        const newPost: IPostInputModel = {
             blogId: createBlog.body.id,
             content: 'content 2',
             shortDescription: 'short description',
@@ -57,7 +58,7 @@ describe('/posts', () => {
 
         const findPosts = await req.get(SETTINGS.PATH.POSTS);
 
-        const updatePost: BodyTypePost = {
+        const updatePost: IPostInputModel = {
             title: 'test 2',
             blogId: findPosts.body.items[0].blogId,
             content: 'content 2',

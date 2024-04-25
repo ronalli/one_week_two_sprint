@@ -17,7 +17,3 @@ const validationWebsiteUrl = body('websiteUrl').trim().notEmpty().withMessage('F
 
 
 export const validationCreateBlog = [validationTitle, validatorDescription, validationWebsiteUrl];
-
-
-
-

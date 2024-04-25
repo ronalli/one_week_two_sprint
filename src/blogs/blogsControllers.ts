@@ -1,13 +1,15 @@
 import {Request, Response} from "express";
 import {HTTP_STATUSES} from "../settings";
-import {BodyTypeBlog, ParamType, QueryType} from "../types/request-response-type";
 import {blogsQueryRepositories} from "./blogsQueryRepositories";
 import {postsMongoRepositories} from "../posts/postsMongoRepositories";
 import {blogsServices} from "./blogsServices";
+import {IBlogInputModel} from "./types/blogs-types";
+import {IBlogQueryType} from "./types/request-response-type";
+import {postsServices} from "../posts/postsServices";
 
 export const blogsControllers = {
     createBlog: async (req: Request, res: Response) => {
-        const inputDataBlog: BodyTypeBlog = req.body;
+        const inputDataBlog: IBlogInputModel = req.body;
         const createdBlog = await blogsServices.createBlog(inputDataBlog);
         if (createdBlog) {
             res.status(HTTP_STATUSES.CREATED_201).send(createdBlog)
@@ -16,7 +18,7 @@ export const blogsControllers = {
         res.status(HTTP_STATUSES.BED_REQUEST_400).send({})
     },
     getBlog: async (req: Request, res: Response) => {
-        const {id}= req.params as ParamType;
+        const {id}= req.params;
         const blog = await blogsQueryRepositories.findBlogById(id);
         if(blog) {
             res.status(HTTP_STATUSES.OK_200).send(blog)
@@ -26,14 +28,14 @@ export const blogsControllers = {
     },
     getBlogs: async (req: Request, res: Response) => {
 
-        const queryParams: QueryType = req.query;
+        const queryParams: IBlogQueryType = req.query;
 
         const findBlogs = await blogsQueryRepositories.getAllBlogs(queryParams);
         return res.status(HTTP_STATUSES.OK_200).send(findBlogs)
     },
     updateBlog: async (req: Request, res: Response) => {
         const {id} = req.params;
-        const inputUpdateDataBlog = req.body as BodyTypeBlog;
+        const inputUpdateDataBlog: IBlogInputModel = req.body;
         const flag = await blogsServices.updateBlog(id, inputUpdateDataBlog)
         if(flag) {
             return res.status(HTTP_STATUSES.NO_CONTENT_204).send({})
@@ -51,24 +53,24 @@ export const blogsControllers = {
         return
     },
     getAllPostsForBlog: async (req: Request, res: Response) => {
-        const {id} = req.params;
-        const queryParams: QueryType = req.query;
+        const {blogId} = req.params;
+        const queryParams: IBlogQueryType = req.query;
 
-        const result = await blogsQueryRepositories.getAndSortPostsSpecialBlog(id, queryParams)
+        const result = await blogsQueryRepositories.getAndSortPostsSpecialBlog(blogId, queryParams)
 
         res.status(HTTP_STATUSES.OK_200).send(result)
     },
 
     createPostForSpecialBlog: async (req: Request, res: Response) => {
         const inputDataPost = req.body;
-        const {id} = req.params as ParamType;
+        const {blogId} = req.params;
 
         const post = {
-            blogId: id,
+            blogId,
             ...inputDataPost
         }
 
-        const createdPost = await postsMongoRepositories.createPost(post);
+        const createdPost = await postsServices.createPost(post);
 
         if (!createdPost) {
             res.status(HTTP_STATUSES.BED_REQUEST_400).send({})

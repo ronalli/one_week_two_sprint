@@ -1,14 +1,14 @@
 import {Request, Response} from 'express'
 import {HTTP_STATUSES} from "../settings";
-
-import {BodyTypePost, ParamType, QueryType} from "../types/request-response-type";
-import {postsMongoRepositories} from "./postsMongoRepositories";
 import {postsQueryRepositories} from "./postsQueryRepositories";
+import {postsServices} from "./postsServices";
+import {IPostInputModel} from "./types/posts-types";
+import {IPostQueryType} from "./types/request-response-type";
 
 export const postsControllers = {
     createPost: async (req: Request, res: Response) => {
-        const inputDataPost = req.body as BodyTypePost;
-        const newPosts = await postsMongoRepositories.createPost(inputDataPost);
+        const inputDataPost: IPostInputModel = req.body;
+        const newPosts = await postsServices.createPost(inputDataPost);
         if (!newPosts) {
             res.status(HTTP_STATUSES.BED_REQUEST_400).send({})
             return
@@ -17,8 +17,8 @@ export const postsControllers = {
         return;
     },
     getPost: async (req: Request, res: Response) => {
-        const {id} = req.params as ParamType;
-        const findPost = await postsMongoRepositories.findPostById(id)
+        const {id} = req.params;
+        const findPost = await postsQueryRepositories.findPostById(id)
         if (findPost) {
             res.status(HTTP_STATUSES.OK_200).send(findPost)
             return
@@ -27,14 +27,14 @@ export const postsControllers = {
         return
     },
     getPosts: async (req: Request, res: Response) => {
-        const queryParams: QueryType = req.query;
-        const findPosts = await postsQueryRepositories.getAllPosts(queryParams)
+        const queryParams: IPostQueryType = req.query;
+        const findPosts = await postsQueryRepositories.getPosts(queryParams)
         res.status(HTTP_STATUSES.OK_200).send(findPosts)
     },
     updatePost: async (req: Request, res: Response) => {
-        const {id} = req.params as ParamType;
-        const updateDataPost = req.body as BodyTypePost;
-        const flag = await postsMongoRepositories.updatePost(id, updateDataPost)
+        const {id} = req.params;
+        const updateDataPost: IPostInputModel = req.body;
+        const flag = await postsServices.updatePost(id, updateDataPost)
         if (flag) {
             res.status(HTTP_STATUSES.NO_CONTENT_204).send({})
             return
@@ -43,8 +43,8 @@ export const postsControllers = {
         return;
     },
     deletePost: async (req: Request, res: Response) => {
-        const {id} = req.params as ParamType;
-        const flag = await postsMongoRepositories.deletePost(id);
+        const {id} = req.params;
+        const flag = await postsServices.deletePost(id);
         if (flag) {
             res.status(HTTP_STATUSES.NO_CONTENT_204).send({});
             return;

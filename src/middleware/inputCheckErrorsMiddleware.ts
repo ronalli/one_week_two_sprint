@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {validationResult} from "express-validator";
 import {HTTP_STATUSES} from "../settings";
-import {formatingDataErrors} from "../utils/fromatingData";
+import {formatingDataErrors} from "../utils/formatingOutputErrors";
 
 export const inputCheckErrorsMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req).array({onlyFirstError: true})

@@ -1,10 +1,10 @@
-import {BodyTypeBlog} from "../types/request-response-type";
 import {blogCollection} from "../db/mongo-db";
 import {ObjectId} from "mongodb";
-import {formatingDataForOutputBlog} from "../utils/fromatingData";
+import {IBlogInputModel} from "./types/blogs-types";
+import {blogsQueryRepositories} from "./blogsQueryRepositories";
 
 export const blogsMongoRepositories = {
-    create: async (blog: BodyTypeBlog) => {
+    create: async (blog: IBlogInputModel) => {
         const newBlog = {
             ...blog,
             createdAt: new Date().toISOString(),
@@ -14,7 +14,7 @@ export const blogsMongoRepositories = {
             const insertedBlog = await blogCollection.insertOne(newBlog);
             const foundBlog = await blogCollection.findOne({_id: insertedBlog.insertedId})
             if (foundBlog) {
-                return formatingDataForOutputBlog(foundBlog)
+                return blogsQueryRepositories._formatingDataForOutputBlog(foundBlog)
             }
             return;
         } catch (e) {
@@ -22,7 +22,7 @@ export const blogsMongoRepositories = {
             return;
         }
     },
-    update: async (id: string, inputUpdateDataBlog: BodyTypeBlog) => {
+    update: async (id: string, inputUpdateDataBlog: IBlogInputModel) => {
         const {name, websiteUrl, description} = inputUpdateDataBlog
         try {
             const findBlog = await blogCollection.findOne({_id: new ObjectId(id)});

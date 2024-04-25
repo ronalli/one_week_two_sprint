@@ -1,40 +1,13 @@
-import {BodyTypePost} from "../types/request-response-type";
-import {PostDBType} from "../db/post-types-db";
-
 import {postCollection} from "../db/mongo-db";
 import {ObjectId} from "mongodb";
-import {formatingDataForOutputPost} from "../utils/fromatingData";
 import {blogsQueryRepositories} from "../blogs/blogsQueryRepositories";
+import {postsQueryRepositories} from "./postsQueryRepositories";
+import {IPostDBType, IPostInputModel} from "./types/posts-types";
 
 export const postsMongoRepositories = {
-    findPostById: async (id: string) => {
-        try {
-            const foundPost = await postCollection.findOne({_id: new ObjectId(id)});
-            if (foundPost) {
-                return formatingDataForOutputPost(foundPost);
-            }
-            return;
-        } catch (e) {
-            return;
-        }
-    },
-    // findAllPosts: async () => {
-    //     try {
-    //         const foundPosts = await postCollection.find({}).toArray();
-    //         if (foundPosts.length > 0) {
-    //             return foundPosts.map(post => {
-    //                 return formatingDataForOutputPost(post)
-    //             });
-    //         }
-    //         return;
-    //     } catch (e) {
-    //         return;
-    //     }
-    //
-    // },
-    createPost: async (post: BodyTypePost) => {
+    create: async (post: IPostInputModel) => {
         const findBlog = await blogsQueryRepositories.findBlogById(post.blogId);
-        let newPost: PostDBType;
+        let newPost: IPostDBType;
         if (findBlog) {
             newPost = {
                 ...post,
@@ -45,7 +18,7 @@ export const postsMongoRepositories = {
                 const insertedPost = await postCollection.insertOne(newPost);
                 const foundPost = await postCollection.findOne({_id: insertedPost.insertedId});
                 if (foundPost) {
-                    return formatingDataForOutputPost(foundPost);
+                    return postsQueryRepositories._formatingDataForOutputPost(foundPost);
                 }
                 return;
             } catch (e) {
@@ -54,7 +27,7 @@ export const postsMongoRepositories = {
         }
         return false;
     },
-    updatePost: async (id: string, updatePost: BodyTypePost) => {
+    update: async (id: string, updatePost: IPostInputModel) => {
         try {
             const findPost = await postCollection.findOne({_id: new ObjectId(id)});
             if (findPost) {
@@ -74,7 +47,7 @@ export const postsMongoRepositories = {
         }
 
     },
-    deletePost: async (id: string) => {
+    delete: async (id: string) => {
         const findDeletePost = await postCollection.findOne({_id: new ObjectId(id)});
         if (findDeletePost) {
             await postCollection.findOneAndDelete({_id: new ObjectId(id)});

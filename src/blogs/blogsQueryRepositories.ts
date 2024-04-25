@@ -1,16 +1,14 @@
-import {QueryType} from "../types/request-response-type";
 import {createDefaultValues} from "../utils/helper";
 import {blogCollection, postCollection} from "../db/mongo-db";
-import {BlogOutputType, PaginatorBlog} from "../types/output-blog-type";
 import {ObjectId} from "mongodb";
-import {BlogDBType} from "../db/blog-types-db";
-import {PostDBType} from "../db/post-types-db";
-import {PostOutputType} from "../types/output-post-type";
+import {IBlogQueryType} from "./types/request-response-type";
+import {IBlogDBType, IBlogViewModel, IPaginatorBlogViewModel} from "./types/blogs-types";
+import {IPostDBType, IPostViewModel} from "../posts/types/posts-types";
 
 
 export const blogsQueryRepositories = {
 
-    getAndSortPostsSpecialBlog: async (blogId: string, queryParams: QueryType) => {
+    getAndSortPostsSpecialBlog: async (blogId: string, queryParams: IBlogQueryType) => {
 
         const query = createDefaultValues(queryParams);
 
@@ -47,7 +45,7 @@ export const blogsQueryRepositories = {
         }
     },
 
-    getAllBlogs: async (queryParams: QueryType): Promise<PaginatorBlog | []> => {
+    getAllBlogs: async (queryParams: IBlogQueryType): Promise<IPaginatorBlogViewModel | []> => {
         const query = createDefaultValues(queryParams);
 
         const search = query.searchNameTerm ? {name: {$regex: `${query.searchNameTerm}`, $options: "i"}} : {}
@@ -92,7 +90,7 @@ export const blogsQueryRepositories = {
         }
 
     },
-    _formatingDataForOutputBlog: (input: BlogDBType):BlogOutputType => {
+    _formatingDataForOutputBlog: (input: IBlogDBType):IBlogViewModel => {
         return {
             id: String(input._id),
             name: input.name,
@@ -102,7 +100,7 @@ export const blogsQueryRepositories = {
             isMembership: input.isMembership,
         };
     },
-    _formatingDataForOutputPost: (input: PostDBType):PostOutputType => {
+    _formatingDataForOutputPost: (input: IPostDBType):IPostViewModel => {
         return {
             id: String(input._id),
             blogId: input.blogId,

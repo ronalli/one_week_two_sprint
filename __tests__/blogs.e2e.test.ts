@@ -3,7 +3,7 @@ import {HTTP_STATUSES} from "../src/settings";
 import {SETTINGS} from "../src/settings";
 import {describe} from "node:test";
 import {connectToDB} from "../src/db/mongo-db";
-import {BodyTypeBlog} from "../src/types/request-response-type";
+import {IBlogInputModel} from "../src/blogs/types/blogs-types";
 
 
 describe('/blogs', () => {
@@ -102,7 +102,7 @@ describe('/blogs', () => {
     it('should correct update blog', async () => {
         const findBlogs = await req.get(SETTINGS.PATH.BLOGS);
 
-        const updateBlogs: BodyTypeBlog = {
+        const updateBlogs: IBlogInputModel = {
             name: 'test valid',
             websiteUrl: 'https://example.com',
             description: 'valid description',

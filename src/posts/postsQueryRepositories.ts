@@ -1,12 +1,12 @@
-import {QueryType} from "../types/request-response-type";
 import {createDefaultValues} from "../utils/helper";
 import {postCollection} from "../db/mongo-db";
-import {formatingDataForOutputPost} from "../utils/fromatingData";
+import {ObjectId} from "mongodb";
+import {IPaginatorPostViewModel, IPostDBType, IPostViewModel} from "./types/posts-types";
+import {IPostQueryType} from "./types/request-response-type";
 
 export const postsQueryRepositories = {
-    getAllPosts: async (queryParams: QueryType) => {
+    getPosts: async (queryParams: IPostQueryType): Promise<IPaginatorPostViewModel | []> => {
         const query = createDefaultValues(queryParams);
-
         try {
             const allPosts = await postCollection.find()
                 .sort(query.sortBy, query.sortDirection)
@@ -21,12 +21,35 @@ export const postsQueryRepositories = {
                 page: query.pageNumber,
                 pageSize: query.pageSize,
                 totalCount,
-                items: allPosts.map(x => formatingDataForOutputPost(x))
+                items: allPosts.map(x => postsQueryRepositories._formatingDataForOutputPost(x))
             }
 
         } catch (error) {
             console.log(error);
+            return []
         }
-        return true;
+    },
+
+    findPostById: async (id: string) => {
+        try {
+            const foundPost = await postCollection.findOne({_id: new ObjectId(id)});
+            if (foundPost) {
+                return postsQueryRepositories._formatingDataForOutputPost(foundPost);
+            }
+            return;
+        } catch (e) {
+            return;
+        }
+    },
+    _formatingDataForOutputPost : (input: IPostDBType): IPostViewModel => {
+        return {
+            id: String(input._id),
+            blogId: input.blogId,
+            content: input.content,
+            createdAt: input.createdAt,
+            shortDescription: input.shortDescription,
+            blogName: input.blogName,
+            title: input.title,
+        };
     }
 }
