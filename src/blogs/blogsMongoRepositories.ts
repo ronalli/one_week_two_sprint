@@ -4,7 +4,7 @@ import {ObjectId} from "mongodb";
 import {formatingDataForOutputBlog} from "../utils/fromatingData";
 
 export const blogsMongoRepositories = {
-    createBlog: async (blog: BodyTypeBlog) => {
+    create: async (blog: BodyTypeBlog) => {
         const newBlog = {
             ...blog,
             createdAt: new Date().toISOString(),
@@ -22,20 +22,7 @@ export const blogsMongoRepositories = {
             return;
         }
     },
-    findBlogById: async (id: string) => {
-        try {
-            const foundBlog = await blogCollection.findOne({_id: new ObjectId(id)});
-            if (foundBlog) {
-                return formatingDataForOutputBlog(foundBlog);
-            }
-            return;
-        } catch (e) {
-            // console.log(e)
-            return;
-        }
-
-    },
-    updateBlog: async (id: string, inputUpdateDataBlog: BodyTypeBlog) => {
+    update: async (id: string, inputUpdateDataBlog: BodyTypeBlog) => {
         const {name, websiteUrl, description} = inputUpdateDataBlog
         try {
             const findBlog = await blogCollection.findOne({_id: new ObjectId(id)});
@@ -56,7 +43,7 @@ export const blogsMongoRepositories = {
             return false;
         }
     },
-    deleteBlog: async (id: string) => {
+    delete: async (id: string) => {
         try {
             const flag = await blogCollection.findOne({_id: new ObjectId(id)});
             if (!flag) {

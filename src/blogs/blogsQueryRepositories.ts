@@ -1,8 +1,11 @@
 import {QueryType} from "../types/request-response-type";
 import {createDefaultValues} from "../utils/helper";
 import {blogCollection, postCollection} from "../db/mongo-db";
-import {formatingDataForOutputBlog, formatingDataForOutputPost} from "../utils/fromatingData";
-import {PaginatorBlog} from "../types/output-blog-type";
+import {BlogOutputType, PaginatorBlog} from "../types/output-blog-type";
+import {ObjectId} from "mongodb";
+import {BlogDBType} from "../db/blog-types-db";
+import {PostDBType} from "../db/post-types-db";
+import {PostOutputType} from "../types/output-post-type";
 
 
 export const blogsQueryRepositories = {
@@ -34,7 +37,7 @@ export const blogsQueryRepositories = {
                 page: query.pageNumber,
                 pageSize: query.pageSize,
                 totalCount,
-                items: allPosts.map(x => formatingDataForOutputPost(x))
+                items: allPosts.map(x => blogsQueryRepositories._formatingDataForOutputPost(x))
             }
 
 
@@ -69,11 +72,45 @@ export const blogsQueryRepositories = {
                 page: query.pageNumber,
                 pageSize: query.pageSize,
                 totalCount,
-                items: allBlogs.map(x => formatingDataForOutputBlog(x))
+                items: allBlogs.map(x => blogsQueryRepositories._formatingDataForOutputBlog(x))
             }
         } catch (error) {
             console.log(error);
             return [];
         }
+    },
+    findBlogById: async (id: string) => {
+        try {
+            const foundBlog = await blogCollection.findOne({_id: new ObjectId(id)});
+            if (foundBlog) {
+                return blogsQueryRepositories._formatingDataForOutputBlog(foundBlog);
+            }
+            return;
+        } catch (e) {
+            console.log(e)
+            return;
+        }
+
+    },
+    _formatingDataForOutputBlog: (input: BlogDBType):BlogOutputType => {
+        return {
+            id: String(input._id),
+            name: input.name,
+            description: input.description,
+            websiteUrl: input.websiteUrl,
+            createdAt: input.createdAt,
+            isMembership: input.isMembership,
+        };
+    },
+    _formatingDataForOutputPost: (input: PostDBType):PostOutputType => {
+        return {
+            id: String(input._id),
+            blogId: input.blogId,
+            content: input.content,
+            createdAt: input.createdAt,
+            shortDescription: input.shortDescription,
+            blogName: input.blogName,
+            title: input.title,
+        };
     }
 }

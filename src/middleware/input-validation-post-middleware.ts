@@ -1,5 +1,6 @@
 import {body} from 'express-validator'
 import {blogsMongoRepositories} from "../blogs/blogsMongoRepositories";
+import {blogsQueryRepositories} from "../blogs/blogsQueryRepositories";
 
 const validationTitle = body('title').trim().notEmpty().withMessage('Field title is empty').isLength({
     max: 30
@@ -18,7 +19,7 @@ const validationBlogId = body('blogId').trim().notEmpty().withMessage('Field blo
     .withMessage('Field blogId is not correct type')
     .custom(
         async value => {
-            const isValidBlogId = await blogsMongoRepositories.findBlogById(value);
+            const isValidBlogId = await blogsQueryRepositories.findBlogById(value);
             if(!isValidBlogId) {
                 throw new Error('Field blogId is incorrect')
             }

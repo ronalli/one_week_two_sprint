@@ -14,5 +14,4 @@ testingRouter.delete('/all-data', async (req: Request, res: Response) => {
         console.log(e)
         return;
     }
-
 })

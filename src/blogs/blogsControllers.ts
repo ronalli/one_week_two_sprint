@@ -1,14 +1,14 @@
 import {Request, Response} from "express";
 import {HTTP_STATUSES} from "../settings";
 import {BodyTypeBlog, ParamType, QueryType} from "../types/request-response-type";
-import {blogsMongoRepositories} from "./blogsMongoRepositories";
 import {blogsQueryRepositories} from "./blogsQueryRepositories";
 import {postsMongoRepositories} from "../posts/postsMongoRepositories";
+import {blogsServices} from "./blogsServices";
 
 export const blogsControllers = {
     createBlog: async (req: Request, res: Response) => {
-        const inputDataBlog = req.body as BodyTypeBlog
-        const createdBlog = await blogsMongoRepositories.createBlog(inputDataBlog);
+        const inputDataBlog: BodyTypeBlog = req.body;
+        const createdBlog = await blogsServices.createBlog(inputDataBlog);
         if (createdBlog) {
             res.status(HTTP_STATUSES.CREATED_201).send(createdBlog)
             return;
@@ -17,7 +17,7 @@ export const blogsControllers = {
     },
     getBlog: async (req: Request, res: Response) => {
         const {id}= req.params as ParamType;
-        const blog = await blogsMongoRepositories.findBlogById(id);
+        const blog = await blogsQueryRepositories.findBlogById(id);
         if(blog) {
             res.status(HTTP_STATUSES.OK_200).send(blog)
             return
@@ -34,7 +34,7 @@ export const blogsControllers = {
     updateBlog: async (req: Request, res: Response) => {
         const {id} = req.params;
         const inputUpdateDataBlog = req.body as BodyTypeBlog;
-        const flag = await blogsMongoRepositories.updateBlog(id, inputUpdateDataBlog)
+        const flag = await blogsServices.updateBlog(id, inputUpdateDataBlog)
         if(flag) {
             return res.status(HTTP_STATUSES.NO_CONTENT_204).send({})
         }
@@ -42,7 +42,7 @@ export const blogsControllers = {
     },
     deleteBlog: async (req: Request, res: Response) => {
         const {id} = req.params;
-        const flag = await blogsMongoRepositories.deleteBlog(id);
+        const flag = await blogsServices.deleteBlog(id);
         if(flag) {
             res.status(HTTP_STATUSES.NO_CONTENT_204).send({})
             return

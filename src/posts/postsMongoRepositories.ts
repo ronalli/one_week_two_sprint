@@ -2,9 +2,9 @@ import {BodyTypePost} from "../types/request-response-type";
 import {PostDBType} from "../db/post-types-db";
 
 import {postCollection} from "../db/mongo-db";
-import {blogsMongoRepositories} from "../blogs/blogsMongoRepositories";
 import {ObjectId} from "mongodb";
 import {formatingDataForOutputPost} from "../utils/fromatingData";
+import {blogsQueryRepositories} from "../blogs/blogsQueryRepositories";
 
 export const postsMongoRepositories = {
     findPostById: async (id: string) => {
@@ -33,7 +33,7 @@ export const postsMongoRepositories = {
     //
     // },
     createPost: async (post: BodyTypePost) => {
-        const findBlog = await blogsMongoRepositories.findBlogById(post.blogId);
+        const findBlog = await blogsQueryRepositories.findBlogById(post.blogId);
         let newPost: PostDBType;
         if (findBlog) {
             newPost = {

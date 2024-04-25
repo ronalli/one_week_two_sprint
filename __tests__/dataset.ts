@@ -2,6 +2,7 @@ import {BlogDBType} from "../src/db/blog-types-db";
 import {PostDBType} from "../src/db/post-types-db";
 import {DBType} from "../src/db";
 import {ObjectId} from "mongodb";
+import {IUserDBType} from "../src/users/types/user-types";
 
 export const blog: BlogDBType = {
     _id: new ObjectId("1c8c3224-fc45-4198-ac48-6aac80b5dc10"),
@@ -23,7 +24,16 @@ export const post: PostDBType = {
     createdAt: '2024-04-10T18:49:47.885Z'
 }
 
+export const user: IUserDBType = {
+    login: 'bob',
+    hash: 'fsg5yt4gd4fd7fd3fg23we',
+    _id: new ObjectId("020bf320-fb6f-4968-8820-664c3288c577"),
+    email: 'bob@bob.com',
+    createdAt: '2024-04-10T18:49:47.785Z',
+}
+
 export const dataset: DBType = {
     posts: [post],
-    blogs: [blog]
+    blogs: [blog],
+    users: [user]
 }
