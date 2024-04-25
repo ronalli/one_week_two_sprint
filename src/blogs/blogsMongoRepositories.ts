@@ -1,4 +1,4 @@
-import {blogCollection} from "../db/mongo-db";
+import {blogsCollection} from "../db/mongo-db";
 import {ObjectId} from "mongodb";
 import {IBlogInputModel} from "./types/blogs-types";
 import {blogsQueryRepositories} from "./blogsQueryRepositories";
@@ -11,8 +11,8 @@ export const blogsMongoRepositories = {
             isMembership: false
         }
         try {
-            const insertedBlog = await blogCollection.insertOne(newBlog);
-            const foundBlog = await blogCollection.findOne({_id: insertedBlog.insertedId})
+            const insertedBlog = await blogsCollection.insertOne(newBlog);
+            const foundBlog = await blogsCollection.findOne({_id: insertedBlog.insertedId})
             if (foundBlog) {
                 return blogsQueryRepositories._formatingDataForOutputBlog(foundBlog)
             }
@@ -25,9 +25,9 @@ export const blogsMongoRepositories = {
     update: async (id: string, inputUpdateDataBlog: IBlogInputModel) => {
         const {name, websiteUrl, description} = inputUpdateDataBlog
         try {
-            const findBlog = await blogCollection.findOne({_id: new ObjectId(id)});
+            const findBlog = await blogsCollection.findOne({_id: new ObjectId(id)});
             if (findBlog) {
-                await blogCollection.findOneAndUpdate({_id: new ObjectId(id)}, {
+                await blogsCollection.findOneAndUpdate({_id: new ObjectId(id)}, {
                     $set: {
                         name,
                         description,
@@ -45,11 +45,11 @@ export const blogsMongoRepositories = {
     },
     delete: async (id: string) => {
         try {
-            const flag = await blogCollection.findOne({_id: new ObjectId(id)});
+            const flag = await blogsCollection.findOne({_id: new ObjectId(id)});
             if (!flag) {
                 return false;
             } else {
-                await blogCollection.findOneAndDelete({_id: new ObjectId(id)});
+                await blogsCollection.findOneAndDelete({_id: new ObjectId(id)});
                 return true;
             }
         } catch (e) {

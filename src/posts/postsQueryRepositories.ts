@@ -1,5 +1,5 @@
 import {createDefaultValues} from "../utils/helper";
-import {postCollection} from "../db/mongo-db";
+import {postsCollection} from "../db/mongo-db";
 import {ObjectId} from "mongodb";
 import {IPaginatorPostViewModel, IPostDBType, IPostViewModel} from "./types/posts-types";
 import {IPostQueryType} from "./types/request-response-type";
@@ -8,13 +8,13 @@ export const postsQueryRepositories = {
     getPosts: async (queryParams: IPostQueryType): Promise<IPaginatorPostViewModel | []> => {
         const query = createDefaultValues(queryParams);
         try {
-            const allPosts = await postCollection.find()
+            const allPosts = await postsCollection.find()
                 .sort(query.sortBy, query.sortDirection)
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)
                 .toArray();
 
-            const totalCount = await postCollection.countDocuments();
+            const totalCount = await postsCollection.countDocuments();
 
             return {
                 pagesCount: Math.ceil(totalCount / query.pageSize),
@@ -32,7 +32,7 @@ export const postsQueryRepositories = {
 
     findPostById: async (id: string) => {
         try {
-            const foundPost = await postCollection.findOne({_id: new ObjectId(id)});
+            const foundPost = await postsCollection.findOne({_id: new ObjectId(id)});
             if (foundPost) {
                 return postsQueryRepositories._formatingDataForOutputPost(foundPost);
             }

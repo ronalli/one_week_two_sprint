@@ -1,4 +1,4 @@
-import {postCollection} from "../db/mongo-db";
+import {postsCollection} from "../db/mongo-db";
 import {ObjectId} from "mongodb";
 import {blogsQueryRepositories} from "../blogs/blogsQueryRepositories";
 import {postsQueryRepositories} from "./postsQueryRepositories";
@@ -15,8 +15,8 @@ export const postsMongoRepositories = {
                 createdAt: new Date().toISOString(),
             }
             try {
-                const insertedPost = await postCollection.insertOne(newPost);
-                const foundPost = await postCollection.findOne({_id: insertedPost.insertedId});
+                const insertedPost = await postsCollection.insertOne(newPost);
+                const foundPost = await postsCollection.findOne({_id: insertedPost.insertedId});
                 if (foundPost) {
                     return postsQueryRepositories._formatingDataForOutputPost(foundPost);
                 }
@@ -29,9 +29,9 @@ export const postsMongoRepositories = {
     },
     update: async (id: string, updatePost: IPostInputModel) => {
         try {
-            const findPost = await postCollection.findOne({_id: new ObjectId(id)});
+            const findPost = await postsCollection.findOne({_id: new ObjectId(id)});
             if (findPost) {
-                await postCollection.findOneAndUpdate({_id: new ObjectId(id)}, {
+                await postsCollection.findOneAndUpdate({_id: new ObjectId(id)}, {
                     $set: {
                         title: updatePost.title,
                         content: updatePost.content,
@@ -48,9 +48,9 @@ export const postsMongoRepositories = {
 
     },
     delete: async (id: string) => {
-        const findDeletePost = await postCollection.findOne({_id: new ObjectId(id)});
+        const findDeletePost = await postsCollection.findOne({_id: new ObjectId(id)});
         if (findDeletePost) {
-            await postCollection.findOneAndDelete({_id: new ObjectId(id)});
+            await postsCollection.findOneAndDelete({_id: new ObjectId(id)});
             return true;
         }
         return false;

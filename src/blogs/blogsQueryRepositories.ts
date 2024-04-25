@@ -1,5 +1,5 @@
 import {createDefaultValues} from "../utils/helper";
-import {blogCollection, postCollection} from "../db/mongo-db";
+import {blogsCollection, postsCollection} from "../db/mongo-db";
 import {ObjectId} from "mongodb";
 import {IBlogQueryType} from "./types/request-response-type";
 import {IBlogDBType, IBlogViewModel, IPaginatorBlogViewModel} from "./types/blogs-types";
@@ -20,7 +20,7 @@ export const blogsQueryRepositories = {
         }
 
         try {
-            const allPosts = await postCollection
+            const allPosts = await postsCollection
                 .find(filter)
                 .sort(query.sortBy, query.sortDirection)
                 .skip((query.pageNumber - 1) * query.pageSize)
@@ -28,7 +28,7 @@ export const blogsQueryRepositories = {
                 .toArray();
 
 
-            const totalCount = await postCollection.countDocuments(filter);
+            const totalCount = await postsCollection.countDocuments(filter);
 
             return {
                 pagesCount: Math.ceil(totalCount / query.pageSize),
@@ -55,7 +55,7 @@ export const blogsQueryRepositories = {
         }
 
         try {
-            const allBlogs = await blogCollection
+            const allBlogs = await blogsCollection
                 .find(filter)
                 .sort(query.sortBy, query.sortDirection)
                 .skip((query.pageNumber - 1) * query.pageSize)
@@ -63,7 +63,7 @@ export const blogsQueryRepositories = {
                 .toArray();
 
 
-            const totalCount = await blogCollection.countDocuments(filter);
+            const totalCount = await blogsCollection.countDocuments(filter);
 
             return {
                 pagesCount: Math.ceil(totalCount / query.pageSize),
@@ -79,7 +79,7 @@ export const blogsQueryRepositories = {
     },
     findBlogById: async (id: string) => {
         try {
-            const foundBlog = await blogCollection.findOne({_id: new ObjectId(id)});
+            const foundBlog = await blogsCollection.findOne({_id: new ObjectId(id)});
             if (foundBlog) {
                 return blogsQueryRepositories._formatingDataForOutputBlog(foundBlog);
             }

@@ -1,5 +1,5 @@
 import {IUserDBType, IUserInputModel, IUserViewModel} from "./types/user-types";
-import {userCollection} from "../db/mongo-db";
+import {usersCollection} from "../db/mongo-db";
 import {ObjectId} from "mongodb";
 import {bcryptService} from "../utils/bcrypt-service";
 import bcrypt from "bcrypt";
@@ -17,7 +17,7 @@ export const usersMongoRepositories = {
         }
 
         try {
-            const insertUser = await userCollection.insertOne(newUser);
+            const insertUser = await usersCollection.insertOne(newUser);
             const foundUser = await usersMongoRepositories.findUserById(String(insertUser.insertedId))
 
             if(foundUser) {
@@ -33,7 +33,7 @@ export const usersMongoRepositories = {
     findUserById: async (id: string): Promise<IUserDBType | undefined> => {
         try {
 
-            const foundUser = await userCollection.findOne({_id: new ObjectId(id)})
+            const foundUser = await usersCollection.findOne({_id: new ObjectId(id)})
             if(foundUser) {
                 return foundUser;
             }
@@ -46,12 +46,12 @@ export const usersMongoRepositories = {
     },
     deleteUser: async (id: string): Promise<boolean | undefined> => {
     try {
-        const flag = await userCollection.findOne({_id: new ObjectId(id)});
+        const flag = await usersCollection.findOne({_id: new ObjectId(id)});
         if(!flag) {
             return;
         }
         else {
-            await userCollection.findOneAndDelete({_id: new ObjectId(id)});
+            await usersCollection.findOneAndDelete({_id: new ObjectId(id)});
             return true;
         }
 

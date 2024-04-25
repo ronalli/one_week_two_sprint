@@ -1,6 +1,6 @@
 import {IUserQueryType} from "./types/request-response-type";
 import {IPaginatorUserViewModel, IUserDBType, IUserViewModel} from "./types/user-types";
-import {userCollection} from "../db/mongo-db";
+import {usersCollection} from "../db/mongo-db";
 import {SortDirection} from "mongodb";
 
 export const usersQueryRepositories = {
@@ -27,14 +27,14 @@ export const usersQueryRepositories = {
         }
 
         try {
-            const allUsers = await userCollection
+            const allUsers = await usersCollection
                 .find(filter ? filter : '')
                 .sort(query.sortBy, query.sortDirection)
                 .skip((query.pageNumber - 1) * query.pageSize)
                 .limit(query.pageSize)
                 .toArray();
 
-            const totalCount = await userCollection.countDocuments(filter);
+            const totalCount = await usersCollection.countDocuments(filter);
 
             return {
                 pagesCount: Math.ceil(totalCount/ query.pageSize),
