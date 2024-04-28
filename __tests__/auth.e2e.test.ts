@@ -5,7 +5,7 @@ import {db} from "../src/db/db";
 
 import {MongoMemoryServer} from "mongodb-memory-server";
 
-describe("Users Tests", () => {
+describe("Auth Tests", () => {
     beforeAll(async () => {
         const mongoServer = await MongoMemoryServer.create();
         await db.run(mongoServer.getUri());
@@ -20,7 +20,10 @@ describe("Users Tests", () => {
 
     afterAll(async () => {
         await db.stop();
-        await req.get(SETTINGS.PATH.ALL_DELETE + '/all-data')
+    })
+
+    afterAll(async () => {
+        await req.delete(SETTINGS.PATH.ALL_DELETE + '/all-data')
     })
 
     afterAll(done => done())

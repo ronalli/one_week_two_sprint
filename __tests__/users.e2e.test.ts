@@ -6,13 +6,19 @@ import {MongoMemoryServer} from 'mongodb-memory-server'
 import {IUserInputModel} from "../src/users/types/user-types";
 
 describe("Users Tests", () => {
+
     beforeAll(async () => {
         const mongoServer = await MongoMemoryServer.create();
         await db.run(mongoServer.getUri());
+        await req.delete(SETTINGS.PATH.ALL_DELETE + '/all-data')
     })
 
     afterAll(async () => {
         await db.stop();
+    })
+
+    afterAll(async () => {
+        await req.delete(SETTINGS.PATH.ALL_DELETE + '/all-data')
     })
 
     afterAll(done => done())

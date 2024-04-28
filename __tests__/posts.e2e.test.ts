@@ -1,15 +1,26 @@
 import {req} from "./test-helpers";
 import {HTTP_STATUSES} from "../src/settings";
+import {db} from '../src/db/db'
+import {MongoMemoryServer} from "mongodb-memory-server";
 import {SETTINGS} from "../src/settings";
-import {connectToDB} from "../src/db/mongo-db";
 import {IBlogInputModel} from "../src/blogs/types/blogs-types";
 import {IPostInputModel} from "../src/posts/types/posts-types";
 
-describe('/posts', () => {
+describe('Posts Tests', () => {
     beforeAll(async () => {
+        const mongoServer = await MongoMemoryServer.create();
+        await db.run(mongoServer.getUri());
         await req.delete(SETTINGS.PATH.ALL_DELETE + '/all-data')
-        await connectToDB();
     })
+
+    afterAll(async () => {
+        await db.stop();
+    })
+
+    afterAll(async () => {
+        await req.delete(SETTINGS.PATH.ALL_DELETE + '/all-data')
+    })
+
     it('shouldn\'t create post, as not found blogId', async () => {
         const newPost = {
             blogId: 'fsd',

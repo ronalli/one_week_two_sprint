@@ -1,16 +1,29 @@
 import {req} from "./test-helpers";
+import {db} from '../src/db/db'
+import {MongoMemoryServer} from "mongodb-memory-server";
 import {HTTP_STATUSES} from "../src/settings";
 import {SETTINGS} from "../src/settings";
-import {describe} from "node:test";
-import {connectToDB} from "../src/db/mongo-db";
 import {IBlogInputModel} from "../src/blogs/types/blogs-types";
+import {IPostInputModel} from "../src/posts/types/posts-types";
 
 
-describe('/blogs', () => {
+describe('Blogs Tests', () => {
     beforeAll(async () => {
+        const mongoServer = await MongoMemoryServer.create();
+        await db.run(mongoServer.getUri());
         await req.delete(SETTINGS.PATH.ALL_DELETE + '/all-data')
-        await connectToDB()
     })
+
+    afterAll(async () => {
+        await db.stop();
+    })
+
+    afterAll(async () => {
+        await req.delete(SETTINGS.PATH.ALL_DELETE + '/all-data')
+    })
+
+    afterAll(done => done())
+
     it('should created blog', async () => {
         const blog = {
             name: 'test',
@@ -131,6 +144,34 @@ describe('/blogs', () => {
 
     it('should get blogs with correct query params', async () => {
         const foundBlogs = await req.get(`${SETTINGS.PATH.BLOGS}?sortBy=name&pageNumber=2&pageSize=2&SortDirection=desc`).expect(HTTP_STATUSES.OK_200);
+
+    });
+
+    it('should create post for special blog', async () => {
+        const newBlog: IBlogInputModel = {
+            name: 'test valid',
+            websiteUrl: 'https://example.com',
+            description: 'valid description',
+        }
+
+        const blog = await req.post(SETTINGS.PATH.BLOGS)
+            .set('Authorization', process.env.AUTH_HEADER || '')
+            .send(newBlog)
+
+        const newPost = {
+            content: 'content 2',
+            shortDescription: 'short description',
+            title: 'test 2',
+        }
+
+        const post = await req.post(SETTINGS.PATH.BLOGS + `/${blog.body.id}/posts`)
+            .set('Authorization', process.env.AUTH_HEADER || '')
+            .send(newPost).expect(HTTP_STATUSES.CREATED_201)
+
+        // console.log(post.body)
+
+        expect(blog.body.id).toBe(post.body.blogId)
+        expect(newPost.title).toBe(post.body.title)
 
     });
 })
