@@ -85,7 +85,7 @@ export const blogsQueryRepositories = {
             }
             return;
         } catch (e) {
-            console.log(e)
+            // console.log(e)
             return;
         }
 

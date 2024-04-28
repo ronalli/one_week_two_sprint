@@ -1,7 +1,6 @@
 import {req} from "./test-helpers";
 import {HTTP_STATUSES} from "../src/settings";
 import {SETTINGS} from "../src/settings";
-import {describe} from "node:test";
 import {connectToDB} from "../src/db/mongo-db";
 import {IBlogInputModel} from "../src/blogs/types/blogs-types";
 import {IPostInputModel} from "../src/posts/types/posts-types";
